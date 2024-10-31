@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   card: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     padding: 15,
@@ -12,22 +14,21 @@ export default StyleSheet.create({
     shadowRadius: 1.5,
     elevation: 3,
   },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+  },
   cardTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
-  cardDate: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 5,
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: '#555',
-    marginTop: 5,
-  },
-  cardCategory: {
+  cardType: {
     fontSize: 14,
     color: '#777',
     marginTop: 5,
