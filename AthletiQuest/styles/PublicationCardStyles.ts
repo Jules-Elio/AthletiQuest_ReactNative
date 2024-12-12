@@ -17,20 +17,9 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  cardDate: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 5,
-  },
   cardDescription: {
     fontSize: 14,
     color: '#555',
     marginTop: 5,
-  },
-  cardCategory: {
-    fontSize: 14,
-    color: '#777',
-    marginTop: 5,
-    fontStyle: 'italic',
   },
 });
