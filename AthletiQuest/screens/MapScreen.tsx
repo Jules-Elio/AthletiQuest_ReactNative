@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import CustomMarkerIcon from '../assets/Vector.svg';
 
 const MapScreen = () => {
-  const mapRef = useRef(null); // Référence pour accéder à MapView
+  const mapRef = useRef(null);
+  const [addresses, setAddresses] = useState({});
 
   const events = [
     { id: 1, title: 'Event 1', description: 'Description de l\'événement 1', latitude: 48.8876, longitude: 2.3822 },
@@ -12,15 +13,38 @@ const MapScreen = () => {
     { id: 3, title: 'Event 3', description: 'Description de l\'événement 3', latitude: 48.8562, longitude: 2.3515 },
   ];
 
+  useEffect(() => {
+    // Récupérer les adresses pour chaque événement
+    events.forEach((event) => {
+      fetchAddress(event.latitude, event.longitude, event.id);
+    });
+  }, []);
+
+  const fetchAddress = async (latitude, longitude, id) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
+      );
+      const data = await response.json();
+      const address = data.display_name || 'Adresse non disponible';
+      setAddresses((prevAddresses) => ({
+        ...prevAddresses,
+        [id]: address,
+      }));
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'adresse :', error);
+    }
+  };
+
   const handleMarkerPress = (latitude, longitude) => {
     mapRef.current.animateToRegion(
       {
         latitude,
         longitude,
-        latitudeDelta: 0.01, // Zoom rapproché
-        longitudeDelta: 0.01, // Zoom rapproché
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
       },
-      1000 // Durée de l'animation en millisecondes
+      1000
     );
   };
 
@@ -32,7 +56,7 @@ const MapScreen = () => {
   return (
     <View style={styles.container}>
       <MapView
-        ref={mapRef} // Référence MapView
+        ref={mapRef}
         style={styles.map}
         initialRegion={{
           latitude: 48.8566,
@@ -48,7 +72,7 @@ const MapScreen = () => {
               latitude: event.latitude,
               longitude: event.longitude,
             }}
-            onPress={() => handleMarkerPress(event.latitude, event.longitude)} // Gérer le clic
+            onPress={() => handleMarkerPress(event.latitude, event.longitude)}
           >
             <CustomMarkerIcon width={30} height={30} />
             {/* Callout personnalisé */}
@@ -56,6 +80,9 @@ const MapScreen = () => {
               <View style={styles.calloutContainer}>
                 <Text style={styles.calloutTitle}>{event.title}</Text>
                 <Text style={styles.calloutDescription}>{event.description}</Text>
+                <Text style={styles.calloutAddress}>
+                  {addresses[event.id] || 'Chargement de l\'adresse...'}
+                </Text>
                 <TouchableOpacity
                   style={styles.calloutButton}
                   onPress={() => handleEventButtonPress(event.id)}
@@ -98,6 +125,12 @@ const styles = StyleSheet.create({
   calloutDescription: {
     fontSize: 14,
     marginBottom: 10,
+    textAlign: 'center',
+  },
+  calloutAddress: {
+    fontSize: 12,
+    marginBottom: 10,
+    color: 'gray',
     textAlign: 'center',
   },
   calloutButton: {
