@@ -2,16 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   profileHeader: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    backgroundColor: '#A020F0',
-    borderRadius: 50,
-  },
-  userName: {
+    userName: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 10,
@@ -32,5 +28,17 @@ export default StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginTop: 5,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    // backgroundColor: '#eee',
+  },
+  imageContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: -10,
   },
 });

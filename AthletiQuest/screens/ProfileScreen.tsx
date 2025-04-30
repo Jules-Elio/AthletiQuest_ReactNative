@@ -7,33 +7,17 @@ import TrophyCard from '../components/TrophyCard';
 import PublicationCard from '../components/PublicationCard';
 import SubscriptionCard from '../components/SubscriptionCard';
 import styles from '../styles/ProfileScreenStyles';
+import communityData from '../data/community.json';
+
+const activities = communityData.activities.filter(a => a.userId === 'me');
+const trophies = communityData.trophies.filter(t => t.userId === 'me');
+const subscriptions = communityData.subscriptions.filter(s => s.userId === 'me');
+const publications = communityData.publications.filter(p => p.userId === 'me');
+const groups = communityData.groups.filter(g => g.userId === 'me');
 
 const ProfileScreen = () => {
   const [selectedTab, setSelectedTab] = useState('Aperçu');
   const [refreshing, setRefreshing] = useState(false);
-
-  const activities = [
-    { id: '1', title: 'Course à pied', date: '2024-10-30', description: '5km en 25 minutes' },
-    { id: '2', title: 'Randonnée', date: '2024-10-28', description: '15km de marche' },
-  ];
-
-  const trophies = [
-    { 
-      id: '1', 
-      name: 'Trophée du Marathon', 
-      description: 'Obtenu en terminant un marathon en moins de 4 heures.', 
-      image: 'https://example.com/trophy-marathon.png' 
-    },
-  ];
-
-  const subscriptions = [
-    { id: '1', name: 'Course des Montagnes' },
-    { id: '2', name: 'John Doe' },
-  ];
-
-  const publications = [
-    { id: '1', title: 'Premier Marathon', content: 'Mon expérience incroyable lors de mon premier marathon !' },
-  ];
 
   const renderContent = () => {
     switch (selectedTab) {
@@ -76,7 +60,6 @@ const ProfileScreen = () => {
     }
   };
 
-  // Fonction de rafraîchissement
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
@@ -86,15 +69,18 @@ const ProfileScreen = () => {
 
   return (
     <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
+    style={styles.container}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }
+  >
+    <View style={styles.headerWrapper}>
       <ProfileHeader />
-      <TabNavigator selectedTab={selectedTab} onTabChange={setSelectedTab} />
-      <View style={styles.contentContainer}>{renderContent()}</View>
-    </ScrollView>
+    </View>
+
+    <TabNavigator selectedTab={selectedTab} onTabChange={setSelectedTab} />
+    <View style={styles.contentContainer}>{renderContent()}</View>
+  </ScrollView>
   );
 };
 

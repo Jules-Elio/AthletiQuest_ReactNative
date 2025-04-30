@@ -1,0 +1,64 @@
+{
+    "activities": [
+      { "id": "1", "title": "Course à pied", "date": "2024-10-30", "description": "5km en 25 minutes", "userId": "me" },
+      { "id": "2", "title": "Randonnée", "date": "2024-10-28", "description": "15km de marche", "userId": "me" },
+      { "id": "3", "title": "Trail Nocturne", "date": "2024-11-10", "description": "Course de nuit 10km", "userId": "emma789" },
+      { "id": "4", "title": "Ultra Run", "date": "2025-01-15", "description": "Ultra marathon 50km", "userId": "paul321" },
+      { "id": "5", "title": "5K Sprint", "date": "2024-12-05", "description": "Sprint rapide 5km", "userId": "me" },
+      { "id": "6", "title": "Course Plage", "date": "2024-11-22", "description": "10km sur sable", "userId": "john123" }
+    ],
+    "trophies": [
+      {
+        "id": "1",
+        "name": "Trophée du Marathon",
+        "description": "Obtenu en terminant un marathon en moins de 4 heures.",
+        "image": "https://example.com/trophy-marathon.png",
+        "userId": "me"
+      },
+      {
+        "id": "2",
+        "name": "Trophée Ultra",
+        "description": "Terminer un ultra trail 50km",
+        "image": "https://example.com/trophy-ultra.png",
+        "userId": "alex456"
+      },
+      {
+        "id": "3",
+        "name": "Trophée 5K",
+        "description": "Record personnel sur 5km",
+        "image": "https://example.com/trophy-5k.png",
+        "userId": "me"
+      }
+    ],
+    "subscriptions": [
+      { "id": "1", "name": "Course des Montagnes", "userId": "me" },
+      { "id": "2", "name": "John Doe", "userId": "me" },
+      { "id": "3", "name": "Trail Adventure Club", "userId": "emma789" },
+      { "id": "4", "name": "Marathon Fans", "userId": "me" }
+    ],
+    "publications": [
+      {
+        "id": "1",
+        "title": "Premier Marathon",
+        "content": "Mon expérience incroyable lors de mon premier marathon !",
+        "userId": "me"
+      },
+      {
+        "id": "2",
+        "title": "Entraînement Collectif",
+        "content": "Super session de groupe dimanche dernier !",
+        "userId": "paul321"
+      },
+      {
+        "id": "3",
+        "title": "Objectif Semi-Marathon",
+        "content": "Préparation intense pour mon premier semi 🏃‍♂️",
+        "userId": "me"
+      }
+    ],
+    "groups": [
+      { "id": "1", "name": "Les Runners de Lyon", "userId": "me" },
+      { "id": "2", "name": "Marathoniens de Paname", "userId": "emma789" },
+      { "id": "3", "name": "5K Lovers", "userId": "john123" }
+    ]
+  }

@@ -1,14 +1,33 @@
+// FooterTabNavigator.tsx
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import ActivityScreen from '../screens/ActivityScreen';
 import MapScreen from '../screens/MapScreen';
+import DetailScreen from '../screens/DetailScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+const DetailStack = ({ component }: any) => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Main"
+      component={component}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="Detail"
+      component={DetailScreen}
+      options={{ headerShown: false }}
+    />
+  </Stack.Navigator>
+);
 
 const FooterTabNavigator = () => {
   return (
@@ -16,8 +35,7 @@ const FooterTabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          let iconSize = route.name === 'Home' ? size + 20 : focused ? size + 6 : size;
-
+          let iconSize = focused ? size + 6 : size;
           switch (route.name) {
             case 'Home':
               iconName = 'globe-outline';
@@ -41,9 +59,7 @@ const FooterTabNavigator = () => {
 
           return (
             <View style={styles.iconWrapper}>
-              {route.name === 'Home' && (
-                <View style={styles.centerBackground} />
-              )}
+              {route.name === 'Home' && <View style={styles.centerBackground} />}
               <Ionicons name={iconName} size={iconSize} color={color} />
             </View>
           );
@@ -52,13 +68,14 @@ const FooterTabNavigator = () => {
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: { backgroundColor: '#D3D3D3' },
         tabBarShowLabel: false,
+        headerShown: false,
       })}
     >
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profil' }} />
-      <Tab.Screen name="Community" component={CommunityScreen} options={{ title: 'Communauté' }} />
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
-      <Tab.Screen name="Activity" component={ActivityScreen} options={{ title: 'Activité' }} />
-      <Tab.Screen name="Map" component={MapScreen} options={{ title: 'Map' }} />
+      <Tab.Screen name="Profile" children={() => <DetailStack component={ProfileScreen} />} />
+      <Tab.Screen name="Community" children={() => <DetailStack component={CommunityScreen} />} />
+      <Tab.Screen name="Home" children={() => <DetailStack component={HomeScreen} />} />
+      <Tab.Screen name="Activity" children={() => <DetailStack component={ActivityScreen} />} />
+      <Tab.Screen name="Map" children={() => <DetailStack component={MapScreen} />} />
     </Tab.Navigator>
   );
 };

@@ -1,6 +1,8 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from '../styles/TrophyCardStyles';
+import fallbackImage from '../assets/trophy-placeholder.png';
+import { useNavigation } from '@react-navigation/native';
 
 interface TrophyCardProps {
   name: string;
@@ -9,14 +11,30 @@ interface TrophyCardProps {
 }
 
 const TrophyCard: React.FC<TrophyCardProps> = ({ name, description, image }) => {
+  const navigation = useNavigation();
+  const [imageError, setImageError] = useState(false);
+
   return (
-    <View style={styles.trophyCard}>
-      <Image source={{ uri: image }} style={styles.trophyImage} />
-      <View style={styles.trophyInfo}>
-        <Text style={styles.cardTitle}>{name}</Text>
-        <Text style={styles.cardDescription}>{description}</Text>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('Detail', {
+          type: 'trophy',
+          data: { name, description, image },
+        })
+      }
+    >
+      <View style={styles.trophyCard}>
+        <Image
+          source={image && !imageError ? { uri: image } : fallbackImage}
+          style={styles.trophyImage}
+          onError={() => setImageError(true)}
+        />
+        <View style={styles.trophyInfo}>
+          <Text style={styles.cardTitle}>{name}</Text>
+          <Text style={styles.cardDescription}>{description}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

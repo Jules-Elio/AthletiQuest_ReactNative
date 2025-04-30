@@ -53,17 +53,32 @@ const MapScreen = () => {
     // Ajoutez ici l'action souhaitée pour le bouton
   };
 
+  const zoomMap = (direction) => {
+    const factor = direction === 'in' ? 0.5 : 2;
+    const newRegion = {
+      ...region,
+      latitudeDelta: region.latitudeDelta * factor,
+      longitudeDelta: region.longitudeDelta * factor,
+    };
+  
+    setRegion(newRegion); // met à jour l'état
+    mapRef.current?.animateToRegion(newRegion, 500); // anime la carte
+  };
+
+  const [region, setRegion] = useState({
+    latitude: 48.8566,
+    longitude: 2.3522,
+    latitudeDelta: 0.10,
+    longitudeDelta: 0.10,
+  });
+
   return (
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         style={styles.map}
-        initialRegion={{
-          latitude: 48.8566,
-          longitude: 2.3522,
-          latitudeDelta: 0.10,
-          longitudeDelta: 0.10,
-        }}
+        initialRegion={region}
+        onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
       >
         {events.map((event) => (
           <Marker
@@ -94,6 +109,14 @@ const MapScreen = () => {
           </Marker>
         ))}
       </MapView>
+      <View style={styles.zoomControls}>
+      <TouchableOpacity style={styles.zoomButton} onPress={() => zoomMap('in')}>
+        <Text style={styles.zoomText}>+</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.zoomButton} onPress={() => zoomMap('out')}>
+        <Text style={styles.zoomText}>-</Text>
+      </TouchableOpacity>
+    </View>
     </View>
   );
 };
@@ -143,6 +166,26 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  zoomControls: {
+    position: 'absolute',
+    left: 10,
+    bottom: 40,
+    flexDirection: 'column',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 8,
+    overflow: 'hidden',
+    elevation: 5,
+  },
+  zoomButton: {
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  zoomText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
 

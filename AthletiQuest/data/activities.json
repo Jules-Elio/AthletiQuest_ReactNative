@@ -1,0 +1,11 @@
+{
+    "activities": [
+      { "id": "1", "title": "Petite course balade", "category": "<5km" },
+      { "id": "2", "title": "Miaou course", "category": "Semi-Marathon" },
+      { "id": "3", "title": "Délirant wow", "category": "Marathon" },
+      { "id": "4", "title": "Petit 15km le long du lac", "category": "15km" },
+      { "id": "5", "title": "Randonnée", "category": "10km" },
+      { "id": "6", "title": "Prépa physique", "category": "5km" },
+      { "id": "7", "title": "Prépa physique miaou", "category": "Semi-Marathon" }
+    ]
+  }
