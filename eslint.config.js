@@ -5,6 +5,11 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    ignores: [
+      "**/*.cjs", // ignore tous les fichiers .cjs
+    ],
+  },
+  {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
