@@ -13,7 +13,6 @@ const activities = communityData.activities.filter(a => a.userId === 'me');
 const trophies = communityData.trophies.filter(t => t.userId === 'me');
 const subscriptions = communityData.subscriptions.filter(s => s.userId === 'me');
 const publications = communityData.publications.filter(p => p.userId === 'me');
-const groups = communityData.groups.filter(g => g.userId === 'me');
 
 const ProfileScreen = () => {
   const [selectedTab, setSelectedTab] = useState('Aperçu');

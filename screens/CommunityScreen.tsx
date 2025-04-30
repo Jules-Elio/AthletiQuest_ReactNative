@@ -5,7 +5,6 @@ import SubscriptionCard from '../components/SubscriptionCard';
 import TabNavigator from '../components/TabNavigator';
 import styles from '../styles/ProfileScreenStyles';
 import communityData from '../data/community.json'; // JSON local
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const CommunityScreen = () => {
   const [selectedTab, setSelectedTab] = useState('Aperçu');

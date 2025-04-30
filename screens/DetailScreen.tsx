@@ -5,7 +5,12 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 const DetailScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { type, data }: any = route.params;
+  type DetailParams =
+  | { type: 'activity'; data: { title: string; date?: string; description?: string; category?: string } }
+  | { type: 'trophy'; data: { name: string; description: string } }
+  | { type: 'subscription'; data: { name: string; type: string } };
+
+  const { type, data } = route.params as DetailParams;
 
   const renderContent = () => {
     switch (type) {

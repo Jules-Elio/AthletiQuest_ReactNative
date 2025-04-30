@@ -1,4 +1,5 @@
-const { getDefaultConfig } = require('expo/metro-config');
+/* eslint-env node */
+import { getDefaultConfig } from 'expo/metro-config';
 
 const config = getDefaultConfig(__dirname);
 
@@ -13,4 +14,4 @@ config.resolver = {
   sourceExts: [...config.resolver.sourceExts, 'svg'],
 };
 
-module.exports = config;
+export default config;

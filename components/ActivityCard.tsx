@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
-  Detail: { type: string; data: any };
+  Detail: { type: string; data: { title: string; date?: string; description?: string; category?: string } };
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'Detail'>;

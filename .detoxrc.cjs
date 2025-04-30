@@ -1,32 +1,23 @@
 /** @type {Detox.DetoxConfig} */
 module.exports = {
-  testRunner: {
-    args: {
-      '$0': 'jest',
-      config: 'e2e/jest.config.js'
-    },
-    jest: {
-      setupTimeout: 120000
-    }
-  },
-  apps: {
+  testRunner: 'jest',
+  runnerConfig: 'e2e/jest.config.cjs',
+'apps': {
     'ios.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/YOUR_APP.app',
-      build: 'xcodebuild -workspace ios/YOUR_APP.xcworkspace -scheme YOUR_APP -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/AthletiQuest.app',
+      build: 'xcodebuild -workspace ios/AthletiQuest.xcworkspace -scheme AthletiQuest -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.release': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/YOUR_APP.app',
-      build: 'xcodebuild -workspace ios/YOUR_APP.xcworkspace -scheme YOUR_APP -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/AthletiQuest.app',
+      build: 'xcodebuild -workspace ios/AthletiQuest.xcworkspace -scheme AthletiQuest -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.debug': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
       build: 'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
-      reversePorts: [
-        8081
-      ]
+      reversePorts: [8081]
     },
     'android.release': {
       type: 'android.apk',

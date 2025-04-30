@@ -14,7 +14,7 @@ import DetailScreen from '../screens/DetailScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const DetailStack = ({ component }: any) => (
+const DetailStack = ({ component }: { component: React.ComponentType }) => (
   <Stack.Navigator>
     <Stack.Screen
       name="Main"
@@ -35,7 +35,7 @@ const FooterTabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          let iconSize = focused ? size + 6 : size;
+          const iconSize = focused ? size + 6 : size;
           switch (route.name) {
             case 'Home':
               iconName = 'globe-outline';
