@@ -6,13 +6,22 @@ import ActivityCard from '../components/ActivityCard';
 import styles from '../styles/ActivityScreenStyles';
 import communityData from '../data/community.json';
 
-const activities = communityData.activities;
+type Activity = {
+  id: string;
+  title: string;
+  date: string;
+  description: string;
+  userId: string;
+  category?: string;
+};
 
 const ActivityScreen = () => {
+  const activities: Activity[] = communityData.activities;
   const [search, setSearch] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Tous');
-  const [filteredActivities, setFilteredActivities] = useState([]);
+  const [filteredActivities, setFilteredActivities] = useState<Activity[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  
 
   const filters = ['Tous', '<5km', '5km', '10km', '15km', 'Semi-Marathon', 'Marathon'];
 

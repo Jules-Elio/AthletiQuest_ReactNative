@@ -4,7 +4,7 @@ import MapView, { Marker, Callout } from 'react-native-maps';
 import CustomMarkerIcon from '../assets/Vector.svg';
 
 const MapScreen = () => {
-  const mapRef = useRef(null);
+  const mapRef = useRef<MapView | null>(null);
   const [addresses, setAddresses] = useState({});
 
   const events = [
@@ -20,7 +20,7 @@ const MapScreen = () => {
     });
   }, []);
 
-  const fetchAddress = async (latitude, longitude, id) => {
+  const fetchAddress = async (latitude: number, longitude: number, id: number) => {
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`
@@ -36,7 +36,7 @@ const MapScreen = () => {
     }
   };
 
-  const handleMarkerPress = (latitude, longitude) => {
+  const handleMarkerPress = (latitude: number, longitude: number) => {
     mapRef.current.animateToRegion(
       {
         latitude,
@@ -48,12 +48,12 @@ const MapScreen = () => {
     );
   };
 
-  const handleEventButtonPress = (eventId) => {
+  const handleEventButtonPress = (eventId: number) => {
     console.log(`Button pressed for event ${eventId}`);
     // Ajoutez ici l'action souhaitée pour le bouton
   };
 
-  const zoomMap = (direction) => {
+  const zoomMap = (direction: 'in' | 'out') => {
     const factor = direction === 'in' ? 0.5 : 2;
     const newRegion = {
       ...region,
