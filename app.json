@@ -12,13 +12,19 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.darrao.AthletiQuest",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Nous utilisons votre localisation pour afficher les événements proches.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Nous utilisons votre localisation pour afficher les événements proches même en arrière-plan si nécessaire."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.darrao.AthletiQuest"
     },
     "web": {
       "favicon": "./assets/favicon.png"
