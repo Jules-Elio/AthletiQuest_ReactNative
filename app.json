@@ -22,17 +22,6 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Nous utilisons votre localisation pour afficher les événements proches même en arrière-plan si nécessaire."
       }
     },
-    "plugins": [
-      [
-        "react-native-maps",
-        {
-          "concurrentRoot": false,
-          "ios": {
-            "useFrameworks": false
-          }
-        }
-      ]
-    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
