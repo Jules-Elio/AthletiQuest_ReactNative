@@ -1,0 +1,300 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import { MessageCircle, UserPlus, Users, Trophy } from 'lucide-react-native';
+
+export default function CommunityScreen() {
+  const [activeTab, setActiveTab] = useState<'friends' | 'groups'>('friends');
+
+  const friends = [
+    {
+      id: 1,
+      name: 'Marie Dubois',
+      avatar: 'https://images.pexels.com/photos/1065084/pexels-photo-1065084.jpeg?auto=compress&cs=tinysrgb&w=200',
+      status: 'En ligne',
+      lastRun: '5K - il y a 2h',
+      weeklyKm: 25,
+    },
+    {
+      id: 2,
+      name: 'Thomas Martin',
+      avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200',
+      status: 'Hors ligne',
+      lastRun: '10K - hier',
+      weeklyKm: 32,
+    },
+    {
+      id: 3,
+      name: 'Sarah Johnson',
+      avatar: 'https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=200',
+      status: 'En course',
+      lastRun: 'Marathon - en cours',
+      weeklyKm: 45,
+    },
+  ];
+
+  const groups = [
+    {
+      id: 1,
+      name: 'Runners de Paris',
+      members: 1247,
+      description: 'Groupe de coureurs passionnés de la capitale',
+      image: 'https://images.pexels.com/photos/2803158/pexels-photo-2803158.jpeg?auto=compress&cs=tinysrgb&w=300',
+      nextEvent: '10K du Trocadéro - 15 Mars',
+    },
+    {
+      id: 2,
+      name: 'Marathon Club',
+      members: 856,
+      description: 'Préparation marathon et conseils',
+      image: 'https://images.pexels.com/photos/2402777/pexels-photo-2402777.jpeg?auto=compress&cs=tinysrgb&w=300',
+      nextEvent: 'Sortie longue 25K - 18 Mars',
+    },
+  ];
+
+  const renderFriends = () => (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      {friends.map((friend) => (
+        <View key={friend.id} style={styles.friendCard}>
+          <Image source={{ uri: friend.avatar }} style={styles.avatar} />
+          <View style={styles.friendInfo}>
+            <View style={styles.friendHeader}>
+              <Text style={styles.friendName}>{friend.name}</Text>
+              <View style={[
+                styles.statusIndicator,
+                { backgroundColor: friend.status === 'En ligne' ? '#10B981' : friend.status === 'En course' ? '#F97316' : '#6B7280' }
+              ]} />
+            </View>
+            <Text style={styles.lastRun}>{friend.lastRun}</Text>
+            <Text style={styles.weeklyKm}>{friend.weeklyKm}km cette semaine</Text>
+          </View>
+          <TouchableOpacity style={styles.messageButton}>
+            <MessageCircle size={20} color="#2563EB" />
+          </TouchableOpacity>
+        </View>
+      ))}
+    </ScrollView>
+  );
+
+  const renderGroups = () => (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      {groups.map((group) => (
+        <View key={group.id} style={styles.groupCard}>
+          <Image source={{ uri: group.image }} style={styles.groupImage} />
+          <View style={styles.groupInfo}>
+            <Text style={styles.groupName}>{group.name}</Text>
+            <Text style={styles.groupDescription}>{group.description}</Text>
+            <View style={styles.groupStats}>
+              <View style={styles.statItem}>
+                <Users size={16} color="#6B7280" />
+                <Text style={styles.statText}>{group.members} membres</Text>
+              </View>
+            </View>
+            <Text style={styles.nextEvent}>Prochain: {group.nextEvent}</Text>
+          </View>
+        </View>
+      ))}
+    </ScrollView>
+  );
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Communauté</Text>
+        <TouchableOpacity style={styles.addButton}>
+          <UserPlus size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'friends' && styles.activeTab]}
+          onPress={() => setActiveTab('friends')}
+        >
+          <Text style={[styles.tabText, activeTab === 'friends' && styles.activeTabText]}>
+            Amis ({friends.length})
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'groups' && styles.activeTab]}
+          onPress={() => setActiveTab('groups')}
+        >
+          <Text style={[styles.tabText, activeTab === 'groups' && styles.activeTabText]}>
+            Groupes ({groups.length})
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.content}>
+        {activeTab === 'friends' ? renderFriends() : renderGroups()}
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 20,
+    backgroundColor: '#FF5733',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  addButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    padding: 8,
+    borderRadius: 8,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 20,
+    marginTop: 16,
+    borderRadius: 12,
+    padding: 4,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  activeTab: {
+    backgroundColor: '#FF5733',
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+  },
+  activeTabText: {
+    color: '#FFFFFF',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+  },
+  friendCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+  },
+  friendInfo: {
+    flex: 1,
+  },
+  friendHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  friendName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginRight: 8,
+  },
+  statusIndicator: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  lastRun: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 2,
+  },
+  weeklyKm: {
+    fontSize: 12,
+    color: '#10B981',
+    fontWeight: '500',
+  },
+  messageButton: {
+    padding: 8,
+  },
+  groupCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    marginBottom: 16,
+    overflow: 'hidden',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+  },
+  groupImage: {
+    width: '100%',
+    height: 120,
+  },
+  groupInfo: {
+    padding: 16,
+  },
+  groupName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  groupDescription: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 12,
+  },
+  groupStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  statItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statText: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginLeft: 4,
+  },
+  nextEvent: {
+    fontSize: 14,
+    color: '#2563EB',
+    fontWeight: '500',
+  },
+});
