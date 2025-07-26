@@ -19,7 +19,7 @@ export default function ProfileScreen() {
     totalKm: 2847,
     totalRuns: 156,
     avgPace: '4:32',
-    level: 'Expert',
+    level: 'Habitué de course à pied\nCourir fait du bien',
   };
 
   const trophies = [
@@ -79,7 +79,6 @@ export default function ProfileScreen() {
       name: 'Runners de Paris',
       avatar: 'https://images.pexels.com/photos/2803158/pexels-photo-2803158.jpeg?auto=compress&cs=tinysrgb&w=100',
       mutual: false,
-      isGroup: true,
     },
   ];
 
@@ -94,7 +93,7 @@ export default function ProfileScreen() {
           </View>
         </View>
         <TouchableOpacity style={styles.settingsButton}>
-          <Settings size={24} color="#FFFFFF" />
+          <Settings size={24} color="#000" />
         </TouchableOpacity>
       </View>
 
@@ -145,11 +144,6 @@ export default function ProfileScreen() {
             <SubscriptionCard key={subscription.id} subscription={subscription} />
           ))}
         </View>
-
-        <TouchableOpacity style={styles.stravaConnect}>
-          <BarChart3 size={20} color="#FFFFFF" />
-          <Text style={styles.stravaText}>Connecter Strava</Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -162,16 +156,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row'
   },
   profileImage: {
     width: 60,
@@ -187,15 +180,15 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000',
   },
   userLevel: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#00000099',
     marginTop: 2,
   },
   settingsButton: {
-    padding: 8,
+    marginRight: 8,
   },
   statsContainer: {
     flexDirection: 'row',

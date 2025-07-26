@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import { Calendar, MapPin, Users, Euro } from 'lucide-react-native';
+import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Calendar, MapPin, Users} from 'lucide-react-native';
 
 interface Event {
   id: number;
@@ -21,7 +16,7 @@ interface EventCardProps {
   event: Event;
 }
 
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event }: Readonly<EventCardProps>) {
   return (
     <TouchableOpacity style={styles.card}>
       <View style={styles.header}>

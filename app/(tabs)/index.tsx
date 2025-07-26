@@ -88,12 +88,12 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Athlétisme</Text>
+        <Text style={styles.title}>AthletiQuest</Text>
         <TouchableOpacity
           style={styles.filterButton}
           onPress={() => setShowFilters(true)}
         >
-          <Filter size={20} color="#FFFFFF" />
+          <Filter size={20} color="#000" />
         </TouchableOpacity>
       </View>
 
@@ -101,8 +101,8 @@ export default function HomeScreen() {
         <SimpleMap
           style={styles.map}
           initialRegion={{
-            latitude: location?.coords.latitude || 48.8566,
-            longitude: location?.coords.longitude || 2.3522,
+            latitude: location?.coords.latitude ?? 48.8566,
+            longitude: location?.coords.longitude ?? 2.3522,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
@@ -178,15 +178,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000',
   },
   filterButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#F5F5F5',
     padding: 8,
     borderRadius: 8,
   },

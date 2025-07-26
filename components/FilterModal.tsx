@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
   },
   activeFilterOption: {
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   filterIcon: {
     marginRight: 12,

@@ -22,8 +22,6 @@ export default function EventsScreen() {
       time: '09:00',
       location: 'Bois de Boulogne',
       participants: 2500,
-      type: '10K',
-      price: 25,
       image: 'https://images.pexels.com/photos/2803158/pexels-photo-2803158.jpeg?auto=compress&cs=tinysrgb&w=500',
     },
     {
@@ -33,8 +31,6 @@ export default function EventsScreen() {
       time: '08:00',
       location: 'Champs-Élysées',
       participants: 50000,
-      type: 'Marathon',
-      price: 85,
       image: 'https://images.pexels.com/photos/2402777/pexels-photo-2402777.jpeg?auto=compress&cs=tinysrgb&w=500',
     },
     {
@@ -44,8 +40,6 @@ export default function EventsScreen() {
       time: '08:30',
       location: 'Bois de Vincennes',
       participants: 8000,
-      type: 'Semi-Marathon',
-      price: 45,
       image: 'https://images.pexels.com/photos/2803158/pexels-photo-2803158.jpeg?auto=compress&cs=tinysrgb&w=500',
     },
     {
@@ -55,8 +49,6 @@ export default function EventsScreen() {
       time: '20:00',
       location: 'Parc des Buttes-Chaumont',
       participants: 1200,
-      type: '5K',
-      price: 15,
       image: 'https://images.pexels.com/photos/2402777/pexels-photo-2402777.jpeg?auto=compress&cs=tinysrgb&w=500',
     },
   ];
@@ -79,8 +71,8 @@ export default function EventsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Événements</Text>
-        <Text style={styles.subtitle}>{filteredEvents.length} événements</Text>
+        <Text style={styles.title}>Évènements</Text>
+        <Text style={styles.subtitle}>{filteredEvents.length} évènements</Text>
       </View>
 
       <View style={styles.searchContainer}>
@@ -95,32 +87,6 @@ export default function EventsScreen() {
           />
         </View>
       </View>
-
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filtersContainer}
-        contentContainerStyle={styles.filtersContent}
-      >
-        {filters.map((filter) => (
-          <TouchableOpacity
-            key={filter.id}
-            style={[
-              styles.filterChip,
-              selectedFilter === filter.id && styles.activeFilterChip,
-            ]}
-            onPress={() => setSelectedFilter(filter.id)}
-          >
-            <Text style={[
-              styles.filterText,
-              selectedFilter === filter.id && styles.activeFilterText,
-            ]}>
-              {filter.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
       <ScrollView 
         style={styles.eventsContainer}
         showsVerticalScrollIndicator={false}
@@ -142,16 +108,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000',
   },
   subtitle: {
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#000',
     marginTop: 4,
   },
   searchContainer: {
@@ -185,20 +151,20 @@ const styles = StyleSheet.create({
   filtersContainer: {
     paddingLeft: 20,
     marginBottom: 16,
+    maxHeight: 40,
   },
   filtersContent: {
     paddingRight: 20,
   },
   filterChip: {
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     marginRight: 12,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#E0E0E0'
   },
   activeFilterChip: {
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   filterText: {
     fontSize: 14,
@@ -206,7 +172,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   activeFilterText: {
-    color: '#FFFFFF',
+    color: '#000000',
   },
   eventsContainer: {
     flex: 1,

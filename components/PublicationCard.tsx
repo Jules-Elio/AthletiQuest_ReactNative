@@ -22,7 +22,7 @@ interface PublicationCardProps {
   publication: Publication;
 }
 
-export function PublicationCard({ publication }: PublicationCardProps) {
+export function PublicationCard({ publication }: Readonly<PublicationCardProps>) {
   return (
     <View style={styles.card}>
       <Image source={{ uri: publication.image }} style={styles.image} />
@@ -42,7 +42,7 @@ export function PublicationCard({ publication }: PublicationCardProps) {
             <MessageCircle size={18} color="#6B7280" />
             <Text style={styles.actionText}>{publication.comments}</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.actionButton}>
             <Share size={18} color="#6B7280" />
           </TouchableOpacity>

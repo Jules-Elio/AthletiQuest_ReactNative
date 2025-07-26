@@ -69,13 +69,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
     width: 200,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+
   },
   iconContainer: {
     width: 48,

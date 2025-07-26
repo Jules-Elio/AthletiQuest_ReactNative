@@ -19,7 +19,7 @@ interface StadiumCardProps {
   stadium: Stadium;
 }
 
-export function StadiumCard({ stadium }: StadiumCardProps) {
+export function StadiumCard({ stadium }: Readonly<StadiumCardProps>) {
   return (
     <TouchableOpacity style={styles.card}>
       <View style={styles.header}>

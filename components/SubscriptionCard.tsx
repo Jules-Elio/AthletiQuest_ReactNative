@@ -46,7 +46,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       
       <TouchableOpacity style={styles.followButton}>
         <Text style={styles.followText}>
-          {subscription.mutual ? 'Amis' : 'Suivre'}
+          {subscription.mutual ? 'Amis' : 'Suivi'}
         </Text>
       </TouchableOpacity>
     </View>
@@ -100,11 +100,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#FF5733',
+    borderColor: '#ff6600',
   },
   followText: {
     fontSize: 12,
-    color: '#FF5733',
+    color: '#ff6600',
     fontWeight: '500',
   },
 });

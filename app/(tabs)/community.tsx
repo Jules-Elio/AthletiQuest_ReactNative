@@ -66,17 +66,10 @@ export default function CommunityScreen() {
           <View style={styles.friendInfo}>
             <View style={styles.friendHeader}>
               <Text style={styles.friendName}>{friend.name}</Text>
-              <View style={[
-                styles.statusIndicator,
-                { backgroundColor: friend.status === 'En ligne' ? '#10B981' : friend.status === 'En course' ? '#F97316' : '#6B7280' }
-              ]} />
             </View>
             <Text style={styles.lastRun}>{friend.lastRun}</Text>
             <Text style={styles.weeklyKm}>{friend.weeklyKm}km cette semaine</Text>
           </View>
-          <TouchableOpacity style={styles.messageButton}>
-            <MessageCircle size={20} color="#2563EB" />
-          </TouchableOpacity>
         </View>
       ))}
     </ScrollView>
@@ -150,12 +143,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: '#000',
   },
   addButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -177,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   activeTab: {
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   tabText: {
     fontSize: 16,
@@ -185,7 +178,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   activeTabText: {
-    color: '#FFFFFF',
+    color: '#000',
   },
   content: {
     flex: 1,

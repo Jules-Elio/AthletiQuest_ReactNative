@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   title: {
     fontSize: 24,
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
   },
   routeMarker: {
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -198,14 +198,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FF5733',
+    borderColor: '#ff6600',
   },
   activeButton: {
-    backgroundColor: '#FF5733',
+    backgroundColor: '#ff6600',
   },
   controlText: {
     marginLeft: 8,
-    color: '#FF5733',
+    color: '#ff6600',
     fontWeight: '500',
   },
   activeText: {

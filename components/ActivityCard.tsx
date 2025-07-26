@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-import { Calendar, MapPin, Users, Euro } from 'lucide-react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Calendar, MapPin, Users} from 'lucide-react-native';
+import * as http from "node:http";
 
 interface Event {
   id: number;
@@ -20,11 +15,19 @@ interface Event {
   image: string;
 }
 
-interface ActivityCardProps {
-  event: Event;
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  isRegistered: boolean;
 }
 
-export function ActivityCard({ event }: ActivityCardProps) {
+interface ActivityCardProps {
+  event: Event;
+  user: User;
+}
+
+export function ActivityCard({ event, user }: Readonly<ActivityCardProps>) {
   return (
     <TouchableOpacity style={styles.card}>
       <Image source={{ uri: event.image }} style={styles.image} />
@@ -32,9 +35,14 @@ export function ActivityCard({ event }: ActivityCardProps) {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>{event.title}</Text>
-          <View style={styles.typeContainer}>
-            <Text style={styles.type}>{event.type}</Text>
-          </View>
+          <TouchableOpacity style={styles.joinButton} onPress={() => buttonPressed(event, user)}>
+          { user.isRegistered ? (
+                <Text style={styles.joinedText}>Inscrit</Text>
+            ) : (
+                <Text style={styles.joinText}>S'inscrire</Text>
+            )
+          }
+          </TouchableOpacity>
         </View>
 
         <View style={styles.infoContainer}>
@@ -53,19 +61,22 @@ export function ActivityCard({ event }: ActivityCardProps) {
             <Text style={styles.infoText}>{event.participants.toLocaleString()} participants</Text>
           </View>
         </View>
-
-        <View style={styles.footer}>
-          <View style={styles.priceContainer}>
-            <Euro size={16} color="#10B981" />
-            <Text style={styles.price}>{event.price}€</Text>
-          </View>
-          <TouchableOpacity style={styles.joinButton}>
-            <Text style={styles.joinText}>S'inscrire</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </TouchableOpacity>
   );
+}
+
+function buttonPressed(event: Event, user: User) {
+  let url = `http://localhost:8080/events/${event.id}/`;
+  if (user.isRegistered) {
+    url += "signout";
+  }
+  else {
+    url += "signup";
+  }
+  http.request(url, {
+    headers: { "Content-Type": "application/json" },
+  })
 }
 
 const styles = StyleSheet.create({
@@ -128,28 +139,25 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   footer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#2E7D32',
-  },
   joinButton: {
-    backgroundColor: '#FF5733',
+    backgroundColor: '#fff',
+    borderColor: '#ff6600',
+    borderWidth: 2,
     paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 8,
   },
   joinText: {
-    color: '#FFFFFF',
+    color: '#000',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  joinedText: {
+    color: '#000',
     fontSize: 14,
     fontWeight: '500',
   },
