@@ -29,18 +29,16 @@ interface EventCardProps {
 
 export function EventCard({ event, user }: Readonly<EventCardProps>) {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => openEvent(event)}>
       <Image source={{ uri: event.image }} style={styles.image} />
-      
+
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>{event.title}</Text>
           <TouchableOpacity style={styles.joinButton} onPress={() => buttonPressed(event, user)}>
-          { user.isRegistered ? (
-                <Text style={styles.joinedText}>Inscrit</Text>
-            ) : (
-                <Text style={styles.joinText}>S'inscrire</Text>
-            )
+          { user.isRegistered ?
+            <Text style={styles.joinedText}>Inscrit</Text> :
+            <Text style={styles.joinText}>S'inscrire</Text>
           }
           </TouchableOpacity>
         </View>
@@ -50,12 +48,12 @@ export function EventCard({ event, user }: Readonly<EventCardProps>) {
             <Calendar size={16} color="#6B7280" />
             <Text style={styles.infoText}>{event.date} à {event.time}</Text>
           </View>
-          
+
           <View style={styles.infoRow}>
             <MapPin size={16} color="#6B7280" />
             <Text style={styles.infoText}>{event.location}</Text>
           </View>
-          
+
           <View style={styles.infoRow}>
             <Users size={16} color="#6B7280" />
             <Text style={styles.infoText}>{event.participants.toLocaleString()} participants</Text>
@@ -77,6 +75,10 @@ function buttonPressed(event: Event, user: User) {
   http.request(url, {
     headers: { "Content-Type": "application/json" },
   })
+}
+
+function openEvent(event: Event) {
+
 }
 
 const styles = StyleSheet.create({
