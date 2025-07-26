@@ -22,12 +22,12 @@ interface User {
   isRegistered: boolean;
 }
 
-interface ActivityCardProps {
+interface EventCardProps {
   event: Event;
   user: User;
 }
 
-export function ActivityCard({ event, user }: Readonly<ActivityCardProps>) {
+export function EventCard({ event, user }: Readonly<EventCardProps>) {
   return (
     <TouchableOpacity style={styles.card}>
       <Image source={{ uri: event.image }} style={styles.image} />

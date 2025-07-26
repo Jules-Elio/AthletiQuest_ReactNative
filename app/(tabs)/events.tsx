@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { Search, Filter, MapPin, Users, Clock } from 'lucide-react-native';
-import { ActivityCard } from '@/components/ActivityCard';
+import { EventCard } from '@/components/ActivityCard';
 
 export default function EventsScreen() {
   const [searchText, setSearchText] = useState('');
@@ -92,7 +92,7 @@ export default function EventsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {filteredEvents.map((event) => (
-          <ActivityCard key={event.id} event={event} />
+          <EventCard key={event.id} event={event} />
         ))}
       </ScrollView>
     </View>
