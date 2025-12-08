@@ -1,78 +1,99 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native';
-import { Search, Filter, MapPin, Users, Clock } from 'lucide-react-native';
-import { EventCard } from '@/components/ActivityCard';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import {Plus, Search} from 'lucide-react-native';
+import {EventCard} from '@/components/ActivityCard';
+import {User} from "@/app/(tabs)/profile";
+import {useSession} from "@/auth/context";
 
 export default function EventsScreen() {
   const [searchText, setSearchText] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+
+  const {signOut, sessionToken} = useSession();
+  const [user, setUser] = useState<User>();
+
+  const getUser = useCallback(async () => {
+    try {
+      console.log("token2", sessionToken);
+      if (sessionToken != null) {
+        const response = await fetch("http://192.168.0.204:8080/users/current", {
+          method: "GET",
+          headers: {'Authorization': `Bearer ${sessionToken}`, "Content-Type": "application/json"},
+        });
+        console.log("response", response);
+        if (response.ok) {
+          const json = await response.json();
+          setUser(json);
+        } else {
+          signOut();
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [sessionToken, signOut])
+
+  useEffect(() => {
+    getUser();
+  }, [getUser])
 
   const events = [
     {
       id: 1,
-      title: '10K de Paris',
-      date: '15 Mars 2025',
-      time: '09:00',
-      location: 'Bois de Boulogne',
-      participants: 2500,
-      image: 'https://images.pexels.com/photos/2803158/pexels-photo-2803158.jpeg?auto=compress&cs=tinysrgb&w=500',
+      name: '10K de Paris',
+      description: 'Paris',
+      createdAt: new Date(),
+      startDate: new Date(),
+      address: 'Bois de Boulogne',
+      participants: [user!],
+      owner: user!,
     },
     {
       id: 2,
-      title: 'Marathon de Paris',
-      date: '20 Avril 2025',
-      time: '08:00',
-      location: 'Champs-Élysées',
-      participants: 50000,
-      image: 'https://images.pexels.com/photos/2402777/pexels-photo-2402777.jpeg?auto=compress&cs=tinysrgb&w=500',
+      name: 'Marathon de Paris',
+      description: 'Paris',
+      createdAt: new Date(),
+      startDate: new Date(),
+      address: 'Champs-Élysées',
+      participants: [],
+      owner: user!,
     },
     {
       id: 3,
-      title: 'Semi-Marathon de Vincennes',
-      date: '5 Mai 2025',
-      time: '08:30',
-      location: 'Bois de Vincennes',
-      participants: 8000,
-      image: 'https://images.pexels.com/photos/2803158/pexels-photo-2803158.jpeg?auto=compress&cs=tinysrgb&w=500',
+      name: 'Semi-Marathon de Vincennes',
+      description: 'Paris',
+      createdAt: new Date(),
+      startDate: new Date(),
+      address: 'Bois de Vincennes',
+      participants: [],
+      owner: user!,
     },
     {
       id: 4,
-      title: '5K Nocturne',
-      date: '12 Juin 2025',
-      time: '20:00',
-      location: 'Parc des Buttes-Chaumont',
-      participants: 1200,
-      image: 'https://images.pexels.com/photos/2402777/pexels-photo-2402777.jpeg?auto=compress&cs=tinysrgb&w=500',
+      name: '5K Nocturne',
+      description: 'Paris',
+      createdAt: new Date(),
+      startDate: new Date(),
+      address: 'Parc des Buttes-Chaumont',
+      participants: [],
+      owner: user!,
     },
   ];
 
-  const filters = [
-    { id: 'all', label: 'Tous' },
-    { id: '5K', label: '5K' },
-    { id: '10K', label: '10K' },
-    { id: 'Semi-Marathon', label: 'Semi' },
-    { id: 'Marathon', label: 'Marathon' },
-  ];
-
   const filteredEvents = events.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(searchText.toLowerCase()) ||
-                         event.location.toLowerCase().includes(searchText.toLowerCase());
-    const matchesFilter = selectedFilter === 'all' || event.type === selectedFilter;
-    return matchesSearch && matchesFilter;
+    return event.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        event.address.toLowerCase().includes(searchText.toLowerCase());
   });
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Évènements</Text>
-        <Text style={styles.subtitle}>{filteredEvents.length} évènements</Text>
+        <View style={styles.headerContent}>
+          <Text style={styles.title}>Évènements</Text>
+          <Text style={styles.subtitle}>{filteredEvents.length} évènements</Text>
+        </View>
+        <TouchableOpacity style={styles.addButton}>
+          <Plus size={20} color="#000"/>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.searchContainer}>
@@ -92,7 +113,7 @@ export default function EventsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {filteredEvents.map((event) => (
-          <EventCard key={event.id} event={event} />
+          <EventCard key={event.id} event={event} user={user!} />
         ))}
       </ScrollView>
     </View>
@@ -105,10 +126,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
     backgroundColor: '#ff6600',
+  }, headerContent: {
+    flexDirection: 'column'
+  },
+  addButton: {
+    backgroundColor: '#F5F5F5', padding: 8, borderRadius: 8,
   },
   title: {
     fontSize: 28,

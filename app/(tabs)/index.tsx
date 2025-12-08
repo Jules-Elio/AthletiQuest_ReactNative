@@ -1,239 +1,181 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import React, {RefObject, useEffect, useRef, useState} from 'react';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import * as Location from 'expo-location';
-import { Filter, MapPin, Calendar } from 'lucide-react-native';
-import { FilterModal } from '@/components/FilterModal';
-import { StadiumCard } from '@/components/StadiumCard';
-import { EventCard } from '@/components/EventCard';
-import { SimpleMap, Marker } from '@/components/SimpleMap';
+import {PermissionStatus} from 'expo-location';
+import {Search} from 'lucide-react-native';
+import {FilterModal} from '@/components/FilterModal';
+import MapView, {Marker} from 'react-native-maps';
+import {Stadium, StadiumCard} from "@/components/StadiumCard";
 
-const { width, height } = Dimensions.get('window');
+export interface StadiumSearch {
+    name?: string,
+    description?: string,
+    freeAccess?: boolean,
+    city?: string,
+    postalCode?: string,
+    latitude?: number,
+    longitude?: number,
+    searchRadius?: number,
+    resultsLimit?: number
+}
+
+let stadiumRequest: StadiumSearch = {searchRadius: 50000, resultsLimit: 200};
+
+export function getStadiumRequest(): StadiumSearch {
+    return stadiumRequest;
+}
+
+export function setStadiumRequest(newStadiumRequest: StadiumSearch): void {
+    stadiumRequest = newStadiumRequest;
+}
 
 export default function HomeScreen() {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'stadiums' | 'events'>('all');
-  const [stadiums, setStadiums] = useState([]);
-  const [events, setEvents] = useState([]);
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [region, setRegion] = useState({
+        latitude: location?.coords.latitude ?? 48.8566,
+        longitude: location?.coords.longitude ?? 2.3522,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+    })
+    const [showFilters, setShowFilters] = useState(false);
+    const [stadiums, setStadiums] = useState<Stadium[]>([]);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        return;
-      }
+    const fetchStadiums = async () => {
+        try {
+            const response = await fetch("http://192.168.0.204:8080/stadiums", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(getStadiumRequest()),
+            });
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
+            const json = await response.json();
+            setStadiums(json.stadiums);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-    // Mock data - replace with actual API calls
-    setStadiums([
-      {
-        id: 1,
-        name: 'Stade Jean Bouin',
-        address: 'Paris 16e',
-        distance: '2.1 km',
-        facilities: ['Piste 400m', 'Vestiaires', 'Tribunes'],
-        latitude: 48.8584,
-        longitude: 2.2945,
-      },
-      {
-        id: 2,
-        name: 'Stade Charléty',
-        address: 'Paris 13e',
-        distance: '4.7 km',
-        facilities: ['Piste 400m', 'Saut en longueur', 'Lancer'],
-        latitude: 48.8186,
-        longitude: 2.3448,
-      },
-    ]);
+    useEffect(() => {
 
-    setEvents([
-      {
-        id: 1,
-        title: '10K de Paris',
-        date: '15 Mars 2025',
-        time: '09:00',
-        location: 'Bois de Boulogne',
-        participants: 2500,
-        type: '10K',
-        latitude: 48.8620,
-        longitude: 2.2640,
-      },
-      {
-        id: 2,
-        title: 'Marathon de Paris',
-        date: '20 Avril 2025',
-        time: '08:00',
-        location: 'Champs-Élysées',
-        participants: 50000,
-        type: 'Marathon',
-        latitude: 48.8738,
-        longitude: 2.2950,
-      },
-    ]);
-  }, []);
+        const getLocPerm = async () => {
+            let {status} = await Location.requestForegroundPermissionsAsync();
+            let location: Location.LocationObject | null = null;
+            if (status === PermissionStatus.GRANTED) {
+                location = await Location.getCurrentPositionAsync({});
+                setLocation(location);
+                animateToRegion(location.coords.latitude, location.coords.longitude, 10);
+                setStadiumRequest({
+                    ...getStadiumRequest(),
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude
+                });
 
-  const filteredStadiums = activeFilter === 'events' ? [] : stadiums;
-  const filteredEvents = activeFilter === 'stadiums' ? [] : events;
+            }
+            await fetchStadiums();
+        };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>AthletiQuest</Text>
-        <TouchableOpacity
-          style={styles.filterButton}
-          onPress={() => setShowFilters(true)}
-        >
-          <Filter size={20} color="#000" />
-        </TouchableOpacity>
-      </View>
+        getLocPerm();
+    }, []);
 
-      <View style={styles.mapContainer}>
-        <SimpleMap
-          style={styles.map}
-          initialRegion={{
-            latitude: location?.coords.latitude ?? 48.8566,
-            longitude: location?.coords.longitude ?? 2.3522,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-        />
-        <View style={styles.markersOverlay}>
-          {filteredStadiums.map((stadium) => (
-            <Marker
-              key={`stadium-${stadium.id}`}
-              coordinate={{
-                latitude: stadium.latitude,
-                longitude: stadium.longitude,
-              }}
-              title={stadium.name}
-              description={stadium.address}
+    const mapRef: RefObject<any> = useRef("prout");
+    const animateToRegion = (lat: number, lon: number, zoom: number) => {
+        let newRegion = {
+            latitude: lat, longitude: lon, latitudeDelta: zoom / 100, longitudeDelta: zoom / 100,
+        }
+        setRegion(newRegion)
+        mapRef.current.animateToRegion(newRegion, 1000)
+    };
+
+    return (<View style={styles.container}>
+        <View style={styles.header}>
+            <Text style={styles.title}>AthletiQuest</Text>
+            <TouchableOpacity
+                style={styles.filterButton}
+                onPress={() => setShowFilters(true)}
             >
-              <View style={styles.stadiumMarker}>
-                <MapPin size={20} color="#FFFFFF" />
-              </View>
-            </Marker>
-          ))}
-          
-          {filteredEvents.map((event) => (
-            <Marker
-              key={`event-${event.id}`}
-              coordinate={{
-                latitude: event.latitude,
-                longitude: event.longitude,
-              }}
-              title={event.title}
-              description={event.date}
-            >
-              <View style={styles.eventMarker}>
-                <Calendar size={20} color="#FFFFFF" />
-              </View>
-            </Marker>
-          ))}
+                <Search size={20} color="#000"/>
+            </TouchableOpacity>
         </View>
-      </View>
 
-      <View style={styles.listContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {activeFilter !== 'events' && filteredStadiums.map((stadium) => (
-            <StadiumCard key={stadium.id} stadium={stadium} />
-          ))}
-          
-          {activeFilter !== 'stadiums' && filteredEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </ScrollView>
-      </View>
+        <View style={styles.mapContainer}>
+            <MapView
+                ref={mapRef}
+                style={styles.map}
+                initialRegion={region}
+                showsUserLocation={true}
+                showsMyLocationButton={true}
+            >
 
-      <FilterModal
-        visible={showFilters}
-        onClose={() => setShowFilters(false)}
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-      />
-    </View>
-  );
+                {stadiums.map((stadium) => (<Marker
+                    key={stadium.id}
+                    coordinate={{
+                        latitude: stadium.coordinates.y, longitude: stadium.coordinates.x,
+                    }}
+                    title={stadium.name}
+                    description={stadium.description}
+                />))}
+
+            </MapView>
+        </View>
+
+        <View style={styles.listContainer}>
+            {stadiums.length > 0 ? <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {stadiums.map((stadium) => (<StadiumCard
+                    key={stadium.id}
+                    stadium={stadium}
+                    onPress={() => {
+                        animateToRegion(stadium.coordinates.y, stadium.coordinates.x, 0.5)
+                    }}/>))}
+            </ScrollView> : <Text style={{fontSize: 24, justifyContent: "center", alignSelf: "center"}}>Aucun résultats</Text>}
+
+        </View>
+
+        <FilterModal
+            visible={showFilters}
+            onClose={() => setShowFilters(false)}
+            onFilterChanged={() => fetchStadiums()}
+        />
+    </View>);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
-    backgroundColor: '#ff6600',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  filterButton: {
-    backgroundColor: '#F5F5F5',
-    padding: 8,
-    borderRadius: 8,
-  },
-  mapContainer: {
-    flex: 1,
-    marginHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 12,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    container: {
+        flex: 1, backgroundColor: '#F5F5F5',
+    }, header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 60,
+        paddingBottom: 20,
+        backgroundColor: '#ff6600',
+    }, title: {
+        fontSize: 24, fontWeight: 'bold', color: '#000',
+    }, filterButton: {
+        backgroundColor: '#F5F5F5', padding: 8, borderRadius: 8,
+    }, mapContainer: {
+        flex: 1,
+        marginHorizontal: 16,
+        marginTop: 16,
+        borderRadius: 12,
+        overflow: 'hidden',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0, height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        position: 'relative',
+    }, map: {
+        width: '100%', height: '100%',
+    }, markersOverlay: {
+        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none',
+    }, stadiumMarker: {
+        backgroundColor: '#10B981', padding: 8, borderRadius: 20, borderWidth: 2, borderColor: '#FFFFFF',
+    }, eventMarker: {
+        backgroundColor: '#F97316', padding: 8, borderRadius: 20, borderWidth: 2, borderColor: '#FFFFFF',
+    }, listContainer: {
+        paddingVertical: 16, paddingLeft: 16,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    position: 'relative',
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-  markersOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    pointerEvents: 'none',
-  },
-  stadiumMarker: {
-    backgroundColor: '#10B981',
-    padding: 8,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  eventMarker: {
-    backgroundColor: '#F97316',
-    padding: 8,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  listContainer: {
-    paddingVertical: 16,
-    paddingLeft: 16,
-  },
 });
