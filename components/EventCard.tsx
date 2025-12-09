@@ -1,17 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
-import {
-    Calendar,
-    MapPin,
-    Notebook,
-    NotebookIcon,
-    NotepadText,
-    NotepadTextDashed,
-    NotepadTextDashedIcon,
-    Users
-} from 'lucide-react-native';
+import {Calendar, MapPin, NotepadText, Users} from 'lucide-react-native';
 import {User} from "@/app/(tabs)/profile";
-import {useSession} from "@/auth/context";
+import {URL_API, useSession} from "@/auth/context";
 
 export interface Event {
     id: number;
@@ -41,7 +32,7 @@ export function EventCard({event, user, onEventUpdated}: Readonly<EventCardProps
     }, [event.participants, user?.id]);
 
     const buttonPressed = async (event: Event, user: User) => {
-        let url = `http://192.168.0.204:8080/events/${event.id}/`;
+        let url = `${URL_API}/events/${event.id}/`;
         if (isSignedUp) {
             url += "signout";
         } else {
@@ -70,7 +61,7 @@ export function EventCard({event, user, onEventUpdated}: Readonly<EventCardProps
             <View style={styles.header}>
                 <Text style={styles.title}>{event.name}</Text>
                 {sessionToken && user && <TouchableOpacity style={isSignedUp ? styles.joinedButton : styles.joinButton}
-                                                   onPress={() => buttonPressed(event, user)}>
+                                                           onPress={() => buttonPressed(event, user)}>
                     {isSignedUp ? <Text style={styles.buttonText}>Inscrit</Text> :
                         <Text style={styles.buttonText}>S'inscrire</Text>}
                 </TouchableOpacity>}
