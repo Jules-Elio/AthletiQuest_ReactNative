@@ -5,7 +5,8 @@ import {Achievement} from '@/components/TrophyCard';
 import {PublicationCard} from '@/components/PublicationCard';
 import {SubscriptionCard} from '@/components/SubscriptionCard';
 import {useSession} from "@/auth/context";
-import {EventCard} from "@/components/ActivityCard";
+import {Event, EventCard} from "@/components/EventCard";
+import {useFocusEffect} from "@react-navigation/native";
 
 export interface User {
     id: string;
@@ -22,10 +23,10 @@ export default function ProfileScreen() {
 
     const {signOut, sessionToken} = useSession();
     const [user, setUser] = useState<User>();
+    const [userEvents, setUsersEvents] = useState<Event[]>([]);
 
     const getUser = useCallback(async () => {
         try {
-            console.log("token2", sessionToken);
             if (sessionToken != null) {
                 const response = await fetch("http://192.168.0.204:8080/users/current", {
                     method: "GET",
@@ -48,38 +49,60 @@ export default function ProfileScreen() {
         getUser();
     }, [getUser])
 
-    const events = [{
-        id: 1,
-        name: '10K de Paris',
-        description: 'Paris',
-        createdAt: new Date(),
-        startDate: new Date(),
-        address: 'Bois de Boulogne',
-        participants: [user!],
-        owner: user!,
-    },];
+    const publications: any[] = [
+    //     {
+    //     id: 1,
+    //     title: 'Super sortie longue !',
+    //     description: '25km dans le bois de Boulogne ce matin',
+    //     date: '2 heures',
+    //     likes: 24,
+    //     comments: 5,
+    // }, {
+    //     id: 2,
+    //     title: 'Nouveau record personnel',
+    //     description: '10K en 42:15 ! Objectif sub-40 en vue',
+    //     date: '1 jour',
+    //     likes: 38,
+    //     comments: 12,
+    // },
+    ];
 
-    const publications = [{
-        id: 1,
-        title: 'Super sortie longue !',
-        description: '25km dans le bois de Boulogne ce matin',
-        date: '2 heures',
-        likes: 24,
-        comments: 5,
-    }, {
-        id: 2,
-        title: 'Nouveau record personnel',
-        description: '10K en 42:15 ! Objectif sub-40 en vue',
-        date: '1 jour',
-        likes: 38,
-        comments: 12,
-    },];
+    const subscriptions: any[] = [
+    //     {
+    //     id: 1, name: 'Marie Dubois', mutual: true,
+    // }, {
+    //     id: 2, name: 'Runners de Paris', mutual: false,
+    // },
+    ];
 
-    const subscriptions = [{
-        id: 1, name: 'Marie Dubois', mutual: true,
-    }, {
-        id: 2, name: 'Runners de Paris', mutual: false,
-    },];
+    const getUserEvents = useCallback(async () => {
+        try {
+            if (sessionToken != null) {
+                const response = await fetch("http://192.168.0.204:8080/events/currentUser/signedin", {
+                    method: "GET",
+                    headers: {'Authorization': `Bearer ${sessionToken}`, "Content-Type": "application/json"},
+                });
+                if (response.ok) {
+                    const json = await response.json();
+                    setUsersEvents(json);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }, [sessionToken])
+
+    const handleEventUpdated = (updated: Event) => {
+        setUsersEvents(prev =>
+            prev.map(ev => ev.id === updated.id ? updated : ev)
+        );
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            getUserEvents();
+        }, [getUserEvents])
+    )
 
 
     return (<View style={styles.container}>
@@ -99,7 +122,8 @@ export default function ProfileScreen() {
                     <Calendar size={20} color="#2563EB"/>
                     <Text style={styles.sectionTitle}>Mes évènements à venir</Text>
                 </View>
-                {events.map((event) => (<EventCard key={event.id} event={event} user={user!}/>))}
+                {userEvents.length > 0 ? userEvents.map((event) => (<EventCard key={event.id} event={event} user={user!} onEventUpdated={handleEventUpdated}/>))
+                : <Text>Vous n'êtes inscrit à aucun évènement à venir</Text>}
             </View>
 
             <View style={styles.section}>
@@ -107,7 +131,8 @@ export default function ProfileScreen() {
                     <FileText size={20} color="#2563EB"/>
                     <Text style={styles.sectionTitle}>Publications récentes</Text>
                 </View>
-                {publications.map((publication) => (<PublicationCard key={publication.id} publication={publication}/>))}
+                {publications.length > 0 ? publications.map((publication) => (<PublicationCard key={publication.id} publication={publication}/>))
+                    : <Text>Vous n'avez créé aucune publications</Text>}
             </View>
 
             <View style={styles.section}>
@@ -115,8 +140,9 @@ export default function ProfileScreen() {
                     <Users size={20} color="#2563EB"/>
                     <Text style={styles.sectionTitle}>Abonnements</Text>
                 </View>
-                {subscriptions.map((subscription) => (
-                    <SubscriptionCard key={subscription.id} subscription={subscription}/>))}
+                {subscriptions.length > 0 ? subscriptions.map((subscription) => (
+                    <SubscriptionCard key={subscription.id} subscription={subscription}/>)) : <Text>Vous n'êtes abonné à personne pour le moment</Text>
+                 }
             </View>
         </ScrollView>
     </View>);

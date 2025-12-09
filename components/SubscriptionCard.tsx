@@ -1,12 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
-import {UserCheck, Users} from 'lucide-react-native';
+import {UserCheck} from 'lucide-react-native';
 
 interface Subscription {
     id: number;
     name: string;
     mutual: boolean;
-    isGroup?: boolean;
 }
 
 interface SubscriptionCardProps {
@@ -19,8 +18,7 @@ export function SubscriptionCard({subscription}: Readonly<SubscriptionCardProps>
             <View style={styles.content}>
                 <Text style={styles.name}>{subscription.name}</Text>
                 <View style={styles.statusContainer}>
-                    {subscription.isGroup ? (<Users size={14} color="#6B7280"/>) : (
-                        <UserCheck size={14} color={subscription.mutual ? '#10B981' : '#6B7280'}/>)}
+                    <UserCheck size={14} color={subscription.mutual ? '#10B981' : '#6B7280'}/>
                     <Text style={styles.status}>
                         {subscription.mutual ? 'Amis' : 'Abonné'}
                     </Text>

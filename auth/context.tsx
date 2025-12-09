@@ -4,21 +4,22 @@ import {useStorageState} from './useStorageState';
 import {User} from "@/app/(tabs)/profile";
 
 const AuthContext = createContext<{
-    signIn: (email: string, password: string) => void;
-    register: (username: string, email: string, password: string) => void;
+    signIn: (email: string, password: string) => string | void;
+    register: (username: string, email: string, password: string) => string | void;
     signOut: () => void;
     sessionToken?: string | null;
     isLoading: boolean;
     user?: User | null;
 }>({
-    signIn: () => null,
-    register: () => null,
+    signIn: () => "",
+    register: () => "",
     signOut: () => null,
     sessionToken: null,
     isLoading: false,
     user: null,
 });
 
+export const URL_API = "http://192.168.0.204:8080";
 
 export function useSession() {
     const value = use(AuthContext);
@@ -36,7 +37,7 @@ export function SessionProvider({children}: Readonly<PropsWithChildren>) {
         try {
             const request = {"email": email, "password": password}
 
-            const response = await fetch("http://192.168.0.204:8080/login", {
+            const response = await fetch(`${URL_API}/login`, {
                 method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(request),
             });
             if (response.ok) {
@@ -45,6 +46,7 @@ export function SessionProvider({children}: Readonly<PropsWithChildren>) {
             }
         } catch (error) {
             console.error(error);
+            return "Email ou mot de passe incorrect";
         }
     }, [])
 
@@ -52,7 +54,7 @@ export function SessionProvider({children}: Readonly<PropsWithChildren>) {
         try {
             const request = {"username": username, "email": email, "password": password}
 
-            const response = await fetch("http://192.168.0.204:8080/register", {
+            const response = await fetch(`${URL_API}/register`, {
                 method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(request),
             });
             if (response.ok) {
@@ -61,6 +63,7 @@ export function SessionProvider({children}: Readonly<PropsWithChildren>) {
             }
         } catch (error) {
             console.error(error);
+            return "Email déjà utilisé";
         }
     }, []);
 

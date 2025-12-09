@@ -6,6 +6,7 @@ import {Search} from 'lucide-react-native';
 import {FilterModal} from '@/components/FilterModal';
 import MapView, {Marker} from 'react-native-maps';
 import {Stadium, StadiumCard} from "@/components/StadiumCard";
+import {URL_API} from "@/auth/context";
 
 export interface StadiumSearch {
     name?: string,
@@ -42,7 +43,7 @@ export default function HomeScreen() {
 
     const fetchStadiums = async () => {
         try {
-            const response = await fetch("http://192.168.0.204:8080/stadiums", {
+            const response = await fetch(`${URL_API}/stadiums`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(getStadiumRequest()),

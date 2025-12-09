@@ -6,7 +6,7 @@ interface Publication {
     id: number;
     title: string;
     description: string;
-    date: string;
+    date: Date;
     likes: number;
     comments: number;
 }
@@ -21,7 +21,7 @@ export function PublicationCard({publication}: Readonly<PublicationCardProps>) {
             <View style={styles.content}>
                 <Text style={styles.title}>{publication.title}</Text>
                 <Text style={styles.description}>{publication.description}</Text>
-                <Text style={styles.date}>Il y a {publication.date}</Text>
+                <Text style={styles.date}>{publication.date.toLocaleString()}</Text>
 
                 <View style={styles.actions}>
                     <TouchableOpacity style={styles.actionButton}>
@@ -32,10 +32,6 @@ export function PublicationCard({publication}: Readonly<PublicationCardProps>) {
                     <TouchableOpacity style={styles.actionButton}>
                         <MessageCircle size={18} color="#6B7280"/>
                         <Text style={styles.actionText}>{publication.comments}</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.actionButton}>
-                        <Share size={18} color="#6B7280"/>
                     </TouchableOpacity>
                 </View>
             </View>

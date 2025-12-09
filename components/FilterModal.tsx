@@ -22,7 +22,6 @@ interface FilterModalProps {
 
 export function FilterModal({visible, onClose, onFilterChanged}: Readonly<FilterModalProps>) {
 
-
     let request = getStadiumRequest();
 
     return (<Modal
@@ -183,9 +182,9 @@ export function FilterModal({visible, onClose, onFilterChanged}: Readonly<Filter
 
 const styles = StyleSheet.create({
     overlay: {
-        flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center',
+        flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)',
     }, modalContent: {
-        backgroundColor: '#FFFFFF', borderRadius: 16, padding: 24, width: '80%', maxWidth: 300,
+        backgroundColor: '#FFFFFF', borderRadius: 16, padding: 24, width: '80%', margin: "auto"
     }, modalHeader: {
         flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20,
     }, modalTitle: {

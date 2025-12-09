@@ -1,107 +1,154 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
-import {Calendar, MapPin, Users} from 'lucide-react-native';
+import {
+    Calendar,
+    MapPin,
+    Notebook,
+    NotebookIcon,
+    NotepadText,
+    NotepadTextDashed,
+    NotepadTextDashedIcon,
+    Users
+} from 'lucide-react-native';
+import {User} from "@/app/(tabs)/profile";
+import {useSession} from "@/auth/context";
 
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  participants: number;
-  type: string;
+export interface Event {
+    id: number;
+    name: string;
+    description: string;
+    address: string;
+    startDate: Date;
+    createdAt: Date;
+    owner: User;
+    participants: User[];
 }
 
 interface EventCardProps {
-  event: Event;
+    event: Event;
+    user?: User;
+    onEventUpdated?: (updatedEvent: Event) => void;
 }
 
-export function EventCard({ event }: Readonly<EventCardProps>) {
-  return (
-    <TouchableOpacity style={styles.card}>
-      <View style={styles.header}>
-        <View style={styles.iconContainer}>
-          <Calendar size={20} color="#F97316" />
+export function EventCard({event, user, onEventUpdated}: Readonly<EventCardProps>) {
+
+    const {sessionToken} = useSession();
+    console.log(event);
+    console.log(user);
+    const [isSignedUp, setIsSignedUp] = useState(event.participants.some(p => p.id === user?.id));
+    useEffect(() => {
+        setIsSignedUp(event.participants.some(p => p.id === user?.id));
+    }, [event.participants, user?.id]);
+
+    const buttonPressed = async (event: Event, user: User) => {
+        let url = `http://192.168.0.204:8080/events/${event.id}/`;
+        if (isSignedUp) {
+            url += "signout";
+        } else {
+            url += "signup";
+        }
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {'Authorization': `Bearer ${sessionToken}`, "Content-Type": "application/json"},
+            });
+            console.log("response", response);
+            if (response.ok) {
+                const refreshEventResponse = await response.json();
+                onEventUpdated?.(refreshEventResponse);
+                setIsSignedUp(!isSignedUp);
+            } else {
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    return (<TouchableOpacity style={styles.card}>
+
+        <View style={styles.content}>
+            <View style={styles.header}>
+                <Text style={styles.title}>{event.name}</Text>
+                {sessionToken && user && <TouchableOpacity style={isSignedUp ? styles.joinedButton : styles.joinButton}
+                                                   onPress={() => buttonPressed(event, user)}>
+                    {isSignedUp ? <Text style={styles.buttonText}>Inscrit</Text> :
+                        <Text style={styles.buttonText}>S'inscrire</Text>}
+                </TouchableOpacity>}
+            </View>
+
+            <View style={styles.infoContainer}>
+                <View style={styles.infoRow}>
+                    <Calendar size={16} color="#6B7280"/>
+                    <Text style={styles.infoText}>{new Date(event.startDate).toLocaleDateString()}</Text>
+                </View>
+
+                <View style={styles.infoRow}>
+                    <NotepadText size={16} color="#6B7280"/>
+                    <Text style={styles.infoText}>{event.description}</Text>
+                </View>
+
+                <View style={styles.infoRow}>
+                    <MapPin size={16} color="#6B7280"/>
+                    <Text style={styles.infoText}>{event.address}</Text>
+                </View>
+
+                <View style={styles.infoRow}>
+                    <Users size={16} color="#6B7280"/>
+                    <Text style={styles.infoText}>{event.participants.length.toLocaleString()} participants</Text>
+                </View>
+            </View>
         </View>
-        <View style={styles.headerInfo}>
-          <Text style={styles.title}>{event.title}</Text>
-          <Text style={styles.type}>{event.type}</Text>
-        </View>
-      </View>
-      
-      <View style={styles.info}>
-        <View style={styles.infoRow}>
-          <Calendar size={14} color="#6B7280" />
-          <Text style={styles.infoText}>{event.date} à {event.time}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <MapPin size={14} color="#6B7280" />
-          <Text style={styles.infoText}>{event.location}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Users size={14} color="#6B7280" />
-          <Text style={styles.infoText}>{event.participants} participants</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+    </TouchableOpacity>);
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginRight: 16,
-    width: 280,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
+    card: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        marginVertical: 10,
+        overflow: 'hidden',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0, height: 2,
+        },
+        shadowOpacity: 0.15,
+        shadowRadius: 2,
+    }, image: {
+        width: '100%', height: 160,
+    }, content: {
+        padding: 16,
+    }, header: {
+        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12,
+    }, title: {
+        fontSize: 18, fontWeight: 'bold', color: '#333', flex: 1, marginRight: 8,
+    }, typeContainer: {
+        backgroundColor: '#F0E68C', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10,
+    }, type: {
+        fontSize: 12, fontWeight: '600', color: '#666600',
+    }, infoContainer: {
+        gap: 6, marginBottom: 16,
+    }, infoRow: {
+        flexDirection: 'row', alignItems: 'center', gap: 6,
+    }, infoText: {
+        fontSize: 14, color: '#555',
+    }, footer: {
+        flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center',
+    }, joinedButton: {
+        backgroundColor: '#fff',
+        borderColor: '#ff6600',
+        borderWidth: 2,
+        paddingHorizontal: 18,
+        paddingVertical: 8,
+        borderRadius: 8,
+    }, joinButton: {
+        backgroundColor: '#ff6600',
+        borderColor: '#ff6600',
+        borderWidth: 2,
+        paddingHorizontal: 18,
+        paddingVertical: 8,
+        borderRadius: 8,
+    }, buttonText: {
+        color: '#000', fontSize: 14, fontWeight: '500',
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  iconContainer: {
-    backgroundColor: '#FFF7ED',
-    padding: 8,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  headerInfo: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  type: {
-    fontSize: 12,
-    color: '#F97316',
-    backgroundColor: '#FFF7ED',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-    marginTop: 4,
-  },
-  info: {
-    gap: 6,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  infoText: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
 });
