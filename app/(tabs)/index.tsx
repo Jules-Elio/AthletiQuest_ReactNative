@@ -14,9 +14,9 @@ export interface StadiumSearch {
     freeAccess?: boolean,
     city?: string,
     postalCode?: string,
-    latitude?: number,
-    longitude?: number,
-    searchRadius?: number,
+    latitude?: number | null,
+    longitude?: number | null,
+    searchRadius?: number | null,
     resultsLimit?: number
 }
 
@@ -66,17 +66,17 @@ export default function HomeScreen() {
             let {status} = await Location.requestForegroundPermissionsAsync();
             let location: Location.LocationObject | null = null;
             if (status === PermissionStatus.GRANTED) {
-                location = await Location.getCurrentPositionAsync({});
-                setLocation(location);
-                animateToRegion(location.coords.latitude, location.coords.longitude, 10);
-                setStadiumRequest({
-                    ...getStadiumRequest(), latitude: location.coords.latitude, longitude: location.coords.longitude
-                });
-
+                await Location.enableNetworkProviderAsync().then(async () => {
+                    location = await Location.getCurrentPositionAsync({});
+                    setLocation(location);
+                    animateToRegion(location.coords.latitude, location.coords.longitude, 10);
+                    setStadiumRequest({
+                        ...getStadiumRequest(), latitude: location.coords.latitude, longitude: location.coords.longitude
+                    });
+                }).catch(() => {});
             }
             await fetchStadiums();
         };
-
         getLocPerm();
     }, []);
 
