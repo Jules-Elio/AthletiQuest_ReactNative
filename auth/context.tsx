@@ -3,6 +3,8 @@ import {createContext, type PropsWithChildren, use, useCallback, useMemo} from '
 import {useStorageState} from './useStorageState';
 import {User} from "@/app/(tabs)/profile";
 
+export const URL_API = "http://192.168.0.204:8080";
+
 const AuthContext = createContext<{
     signIn: (email: string, password: string) => string | void;
     register: (username: string, email: string, password: string) => string | void;
@@ -18,8 +20,6 @@ const AuthContext = createContext<{
     isLoading: false,
     user: null,
 });
-
-export const URL_API = "http://192.168.0.204:8080";
 
 export function useSession() {
     const value = use(AuthContext);
