@@ -1,7 +1,6 @@
 import {createContext, type PropsWithChildren, use, useCallback, useMemo} from 'react';
 
 import {useStorageState} from './useStorageState';
-import {User} from "@/app/(tabs)/profile";
 
 export const URL_API = "http://192.168.0.204:8080";
 
@@ -11,14 +10,8 @@ const AuthContext = createContext<{
     signOut: () => void;
     sessionToken?: string | null;
     isLoading: boolean;
-    user?: User | null;
 }>({
-    signIn: () => "",
-    register: () => "",
-    signOut: () => null,
-    sessionToken: null,
-    isLoading: false,
-    user: null,
+    signIn: () => "", register: () => "", signOut: () => null, sessionToken: null, isLoading: false,
 });
 
 export function useSession() {
@@ -71,19 +64,12 @@ export function SessionProvider({children}: Readonly<PropsWithChildren>) {
         setSessionToken(null);
     }, []);
 
-    const authFunction = useMemo(
-        () => ({
-            signIn,
-            register,
-            signOut,
-            sessionToken,
-            isLoading,
-        }),
-        [signIn, register, signOut, sessionToken, isLoading]
-    );
+    const authFunction = useMemo(() => ({
+        signIn, register, signOut, sessionToken, isLoading,
+    }), [signIn, register, signOut, sessionToken, isLoading]);
 
     return <AuthContext.Provider
-            value={authFunction}>
-            {children}
-        </AuthContext.Provider>;
+        value={authFunction}>
+        {children}
+    </AuthContext.Provider>;
 }
