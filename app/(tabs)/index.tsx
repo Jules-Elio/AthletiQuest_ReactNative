@@ -75,9 +75,9 @@ export default function HomeScreen() {
                     });
                 }).catch(() => {});
             }
-            await fetchStadiums();
         };
-        getLocPerm();
+
+        getLocPerm().then(async () => await fetchStadiums());
     }, []);
 
     const mapRef: RefObject<any> = useRef("prout");
