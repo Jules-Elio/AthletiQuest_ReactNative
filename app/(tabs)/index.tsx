@@ -72,7 +72,9 @@ export default function HomeScreen() {
                     setStadiumRequest({
                         ...getStadiumRequest(), latitude: location.coords.latitude, longitude: location.coords.longitude
                     });
-                }).catch(() => {console.info("Geolocalization not activated, proceeding with default value");});
+                }).catch(() => {
+                    console.info("Geolocalization not activated, proceeding with default value");
+                });
             }
         };
 
