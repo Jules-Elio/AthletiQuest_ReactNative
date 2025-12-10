@@ -61,7 +61,6 @@ export default function HomeScreen() {
     }
 
     useEffect(() => {
-
         const getLocPerm = async () => {
             let {status} = await Location.requestForegroundPermissionsAsync();
             let location: Location.LocationObject | null = null;
@@ -73,7 +72,7 @@ export default function HomeScreen() {
                     setStadiumRequest({
                         ...getStadiumRequest(), latitude: location.coords.latitude, longitude: location.coords.longitude
                     });
-                }).catch(() => {});
+                }).catch(() => {console.info("Geolocalization not activated, proceeding with default value");});
             }
         };
 
