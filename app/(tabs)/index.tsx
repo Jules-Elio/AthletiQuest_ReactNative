@@ -40,6 +40,7 @@ export default function HomeScreen() {
     })
     const [showFilters, setShowFilters] = useState(false);
     const [stadiums, setStadiums] = useState<Stadium[]>([]);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const fetchStadiums = async () => {
         try {
@@ -51,8 +52,11 @@ export default function HomeScreen() {
 
             const json = await response.json();
             setStadiums(json.stadiums);
+            setErrorMessage(null);
         } catch (error) {
             console.error(error);
+            setStadiums([]);
+            setErrorMessage("Erreur avec le service, réessayer plus tard.");
         }
     }
 
@@ -127,7 +131,7 @@ export default function HomeScreen() {
                     onPress={() => {
                         animateToRegion(stadium.coordinates.y, stadium.coordinates.x, 0.5)
                     }}/>))}
-            </ScrollView> : <Text style={{fontSize: 24, justifyContent: "center", alignSelf: "center"}}>Aucun résultats</Text>}
+            </ScrollView> : <Text style={{fontSize: 24, justifyContent: "center", alignSelf: "center"}}>{errorMessage || "Aucun résultats"}</Text>}
 
         </View>
 
