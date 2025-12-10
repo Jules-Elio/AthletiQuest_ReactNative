@@ -108,7 +108,6 @@ export default function HomeScreen() {
                 showsUserLocation={true}
                 showsMyLocationButton={true}
             >
-
                 {stadiums.map((stadium) => (<Marker
                     key={stadium.id}
                     coordinate={{
@@ -117,7 +116,6 @@ export default function HomeScreen() {
                     title={stadium.name}
                     description={stadium.description}
                 />))}
-
             </MapView>
         </View>
 
@@ -130,11 +128,8 @@ export default function HomeScreen() {
                         animateToRegion(stadium.coordinates.y, stadium.coordinates.x, 0.5)
                     }}/>))}
             </ScrollView> : <Text style={{
-                fontSize: 24,
-                justifyContent: "center",
-                alignSelf: "center"
+                fontSize: 24, justifyContent: "center", alignSelf: "center"
             }}>{errorMessage || "Aucun résultats"}</Text>}
-
         </View>
 
         <FilterModal
