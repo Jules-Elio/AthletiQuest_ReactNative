@@ -31,13 +31,6 @@ export function setStadiumRequest(newStadiumRequest: StadiumSearch): void {
 }
 
 export default function HomeScreen() {
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [region, setRegion] = useState({
-        latitude: location?.coords.latitude ?? 48.8566,
-        longitude: location?.coords.longitude ?? 2.3522,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-    })
     const [showFilters, setShowFilters] = useState(false);
     const [stadiums, setStadiums] = useState<Stadium[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -67,8 +60,7 @@ export default function HomeScreen() {
             if (status === PermissionStatus.GRANTED) {
                 await Location.enableNetworkProviderAsync().then(async () => {
                     location = await Location.getCurrentPositionAsync({});
-                    setLocation(location);
-                    animateToRegion(location.coords.latitude, location.coords.longitude, 10);
+                    animateToRegion(location.coords.latitude, location.coords.longitude, 20);
                     setStadiumRequest({
                         ...getStadiumRequest(), latitude: location.coords.latitude, longitude: location.coords.longitude
                     });
@@ -86,9 +78,20 @@ export default function HomeScreen() {
         let newRegion = {
             latitude: lat, longitude: lon, latitudeDelta: zoom / 100, longitudeDelta: zoom / 100,
         }
-        setRegion(newRegion)
         mapRef.current.animateToRegion(newRegion, 1000)
     };
+
+    useEffect(() => {
+        mapRef.current.fitToCoordinates([
+            { latitude: 51, longitude: 2 },   // Nord
+            { latitude: 43, longitude: 3 },   // Sud
+            { latitude: 49, longitude: -4.5 },  // Ouest
+            { latitude: 49, longitude: 7.5 },   // Est
+        ], {
+            edgePadding: { top: 20, bottom: 20, left: 30, right: 50 },
+            animated: false,
+        });
+    }, []);
 
     return (<View style={styles.container}>
         <View style={styles.header}>
@@ -105,7 +108,6 @@ export default function HomeScreen() {
             <MapView
                 ref={mapRef}
                 style={styles.map}
-                initialRegion={region}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
             >
