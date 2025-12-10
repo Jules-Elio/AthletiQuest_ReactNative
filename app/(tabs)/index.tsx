@@ -70,9 +70,7 @@ export default function HomeScreen() {
                 setLocation(location);
                 animateToRegion(location.coords.latitude, location.coords.longitude, 10);
                 setStadiumRequest({
-                    ...getStadiumRequest(),
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude
+                    ...getStadiumRequest(), latitude: location.coords.latitude, longitude: location.coords.longitude
                 });
 
             }
@@ -131,7 +129,11 @@ export default function HomeScreen() {
                     onPress={() => {
                         animateToRegion(stadium.coordinates.y, stadium.coordinates.x, 0.5)
                     }}/>))}
-            </ScrollView> : <Text style={{fontSize: 24, justifyContent: "center", alignSelf: "center"}}>{errorMessage || "Aucun résultats"}</Text>}
+            </ScrollView> : <Text style={{
+                fontSize: 24,
+                justifyContent: "center",
+                alignSelf: "center"
+            }}>{errorMessage || "Aucun résultats"}</Text>}
 
         </View>
 
