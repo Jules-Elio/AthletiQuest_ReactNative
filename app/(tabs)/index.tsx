@@ -42,15 +42,23 @@ export default function HomeScreen() {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(getStadiumRequest()),
             });
-
-            const json = await response.json();
-            setStadiums(json.stadiums);
-            setErrorMessage(null);
+            if (response.ok){
+                const json = await response.json();
+                setStadiums(json.stadiums);
+                setErrorMessage(null);
+            }
+            else {
+                stadiumServiceError();
+            }
         } catch (error) {
             console.error(error);
-            setStadiums([]);
-            setErrorMessage("Erreur avec le service, réessayer plus tard.");
+            stadiumServiceError();
         }
+    }
+
+    const stadiumServiceError = () => {
+        setStadiums([]);
+        setErrorMessage("Erreur avec le service, réessayer plus tard.");
     }
 
     useEffect(() => {
