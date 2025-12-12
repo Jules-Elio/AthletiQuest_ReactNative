@@ -24,8 +24,6 @@ interface EventCardProps {
 export function EventCard({event, user, onEventUpdated}: Readonly<EventCardProps>) {
 
     const {sessionToken} = useSession();
-    console.log(event);
-    console.log(user);
     const [isSignedUp, setIsSignedUp] = useState(event.participants.some(p => p.id === user?.id));
     useEffect(() => {
         setIsSignedUp(event.participants.some(p => p.id === user?.id));
@@ -43,7 +41,6 @@ export function EventCard({event, user, onEventUpdated}: Readonly<EventCardProps
                 method: "POST",
                 headers: {'Authorization': `Bearer ${sessionToken}`, "Content-Type": "application/json"},
             });
-            console.log("response", response);
             if (response.ok) {
                 const refreshEventResponse = await response.json();
                 onEventUpdated?.(refreshEventResponse);

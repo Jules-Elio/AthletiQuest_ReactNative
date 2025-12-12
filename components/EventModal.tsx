@@ -73,7 +73,6 @@ export function EventModal({visible, onClose, user}: Readonly<EventModalProps>) 
                                     headers: {'Authorization': `Bearer ${sessionToken}`, "Content-Type": "application/json"},
                                     body: JSON.stringify(eventRequest)
                                 });
-                                console.log("response", response);
                                 if (response.ok) {
                                     const event = await response.json();
                                     const signupResponse = await fetch(`http://192.168.0.204:8080/events/${event.id}/signup`, {
@@ -82,7 +81,6 @@ export function EventModal({visible, onClose, user}: Readonly<EventModalProps>) 
                                     });
                                     if (signupResponse.ok) {
                                     }
-                                    console.log("response", response.json());
                                 }
                             } catch (error) {
                                 console.error(error);
@@ -106,6 +104,7 @@ export function EventModal({visible, onClose, user}: Readonly<EventModalProps>) 
                                 <TextInput
                                     style={styles.inputStyle}
                                     value={values.description}
+                                    maxLength={255}
                                     onChangeText={handleChange('description')}
                                     onBlur={handleBlur('description')}
                                 />

@@ -32,7 +32,6 @@ export default function ProfileScreen() {
                     method: "GET",
                     headers: {'Authorization': `Bearer ${sessionToken}`, "Content-Type": "application/json"},
                 });
-                console.log("response", response);
                 if (response.ok) {
                     const json = await response.json();
                     setUser(json);

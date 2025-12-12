@@ -44,7 +44,6 @@ export default function EventsScreen() {
             });
             if (response.ok) {
                 const json = await response.json();
-                console.log(json);
                 setEvents(json);
             }
 
